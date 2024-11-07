@@ -1,11 +1,27 @@
-import { useState } from 'react';
+// import { useState } from 'react';
+import { useForm } from "react-hook-form";
 
 export const StudentSubmitPage = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [major, setMajor] = useState('');
-  const [school, setSchool] = useState('');
-  const [grade, setGrade] = useState('');
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const onSubmit = async (data) => {
+        
+          await fetch(`${import.meta.env.VITE_API_URL}/students`, {
+            body: JSON.stringify({
+              
+              firstName: data.firstName,
+              lastName: data.lastName,
+              major: data.major,
+              school: data.school,
+              grade:data.grade,
+            }),
+            headers: {
+              'content-type': 'application/json',
+            },
+            method: 'POST',
+          });
+        };
+
+  // const [grade, setGrade] = useState('');
 
 
   
@@ -14,35 +30,19 @@ export const StudentSubmitPage = () => {
   // 2. add onSubmit handler to the form to submit the data
 
   return (
-    <form>
-      <input type="text" onChange={(e)=> setFirstName(e.target.value)} placeholder="First Name" />
-      <input type="text" onChange={(e)=> setLastName(e.target.value)} placeholder="Last Name" />
-      <input type="text" onChange={(e)=> setMajor(e.target.value)} placeholder="Major" />
-      <input type="text" onChange={(e)=> setSchool(e.target.value)} placeholder="School" />
-      <select  onChange={(e)=> setGrade(e.target.value)} placeholder="Grade" >
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input type="text" {...register("firstName")} placeholder="First Name" />
+      <input type="text" {...register("lastName")} placeholder="Last Name" />
+      <input type="text" {...register("major")} placeholder="Major" />
+      <input type="text" {...register("school")} placeholder="School" />
+      <select  {...register("grade")} placeholder="Grade" >
          <option value="none" selected disabled hidden>Select an Option</option>
          <option value="FRESHMAN">Freshman</option>
          <option value="SOPHMORE">Sophmore</option>
          <option value="JUNIOR">Junior</option>
          <option value="SENIOR">Senior</option>
         </select>
-      <button type="button" onClick = {async () => {
-        
-          await fetch(`${import.meta.env.VITE_API_URL}/students`, {
-            body: JSON.stringify({
-              
-              firstName: firstName,
-              lastName: lastName,
-              major: major,
-              school: school,
-              grade:grade,
-            }),
-            headers: {
-              'content-type': 'application/json',
-            },
-            method: 'POST',
-          });
-        }}>Submit</button>
+      <button type="submit" >Submit</button>
     </form>
   );
 };

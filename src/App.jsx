@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 function App() {
   // the point of state is that is is dynamic and can be changed
   const [students, setStudents] = useState([]); // init state as the studentList
-  useEffect(() => {
+  useEffect(() => { 
     // runs when component renders
     const getStudents = async () => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/students`);
